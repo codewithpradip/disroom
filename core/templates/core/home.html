@@ -13,11 +13,11 @@
             <h3>Browser Topic</h3>
             <hr>
             <div>
-                <a href="">All</a>
+                <a href="{% url 'home'%}">All</a>
             </div>
             {% for topic in topics %}
             <div>
-                <a href="">{{topic.name}}</a>
+                <a href="{% url 'home'%}?q={{topic.name}}">{{topic.name}}</a>
             </div>
             {% endfor %}
         </div>
