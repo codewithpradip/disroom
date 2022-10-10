@@ -1,6 +1,14 @@
 <h1>This is navbar block !!!</h1>
 
-<form action="{% url 'home' %}" method="GET" >
-    <input type="text" name="q" placeholder="Search Rooms ....." >
-</form>
+<div class="search-form">
+    <form action="{% url 'home' %}" method="GET" >
+        <input type="text" name="q" placeholder="Search Rooms ....." >
+    </form>
+</div>
+{% if request.user.is_authenticated %}
+<p>Hello : {{request.user}}</p>
+    <a href="{% url 'user_logout' %}">logout</a>
+{% else %}
+<a href="{% url 'user_login'%}">Login</a>
+{% endif %}
 <hr>
