@@ -1,15 +1,24 @@
 from django.shortcuts import render, redirect
-from .models import Room
+from .models import Room, Message
 from .forms import RoomForm
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 
 
 # Create your views here.
-@login_required(login_url='user_login')
 def room_detail_view(request, pk):
     room = Room.objects.get(id=pk)
-    context = {'room': room}
+    room_messages = room.message_set.all()
+    participants = room.participants.all()
+    if request.method == 'POST':
+        new_message = Message.objects.create(
+            user=request.user,
+            room=room,
+            body=request.POST.get('body')
+        )
+        room.participants.add(request.user)
+        return redirect('room_detail', pk=room.id)
+    context = {'room': room, 'room_messages': room_messages, 'participants': participants}
     return render(request, 'room/room_detail.html', context)
 
 
@@ -49,3 +58,15 @@ def delete_room_view(request, pk):
         room.delete()
         return redirect('home')
     return render(request, 'room/delete_room.html', {'obj': room})
+
+
+@login_required(login_url='login_page')
+def delete_message_view(request, pk):
+    message = Message.objects.get(id=pk)
+    if request.user != message.user:
+        return HttpResponse("You are not allow here !!")
+
+    if request.method == 'POST':
+        message.delete()
+        return redirect('home')
+    return render(request, 'room/delete_message.html', {'obj': message})
