@@ -10,49 +10,13 @@
     <h1>This is home block !!!</h1>
     <div class="home-container">
         <div class="topic">
-            <h3>Browser Topic</h3>
-            <hr>
-            <div>
-                <a href="{% url 'home'%}">All</a>
-            </div>
-            {% for topic in topics %}
-            <div>
-                <a href="{% url 'home'%}?q={{topic.name}}">{{topic.name}}</a>
-            </div>
-            {% endfor %}
+            {% include 'core/topics_component.html' %}
         </div>
         <div class="feed">
-            <a href="{% url 'create_room' %}">Create Room</a>
-            <h5>{{room_count}} Rooms Availabel</h5>
-            <div>
-                {% for room in rooms %}
-                <div>
-                    {% if request.user == room.host %}
-                    <a href="{% url 'update_room' room.id %}">Edit</a>
-                    <a href="{% url 'delete_room' room.id %}">Delete</a>
-                    {% endif %}
-                    <a href="">@{{room.host.username}}</a>
-                    <h3>{{ room.id }}--><a href="{% url 'room_detail' room.id %}">{{room.name}}</a></h3>
-                    <small>{{room.topic.name}}</small><hr>
-                </div>
-                {% endfor %}
-            </div>
+            {% include 'core/feed_component.html' %}
         </div>
         <div class="activity">
-            <h3>Recent Activity</h3>
-            <hr>
-            {% for message in room_messages %}
-            <div>
-                <small><a href="">@{{message.user}} {{message.created_at|timesince}}</a></small>
-                <small>Reply to  "{{message.room}}"</small>
-
-                <p>{{message}}</p>
-                {% if request.user == message.user %}
-                    <a href="{% url 'delete_message' message.id %}">Delete</a>
-                {% endif %}
-                <hr>
-            </div>
-            {% endfor %}
+            {% include 'core/activity_component.html' %}
         </div>
     </div>
 {% endblock %}
